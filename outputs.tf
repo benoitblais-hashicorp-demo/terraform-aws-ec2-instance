@@ -1,4 +1,74 @@
-# This file will contain the output definitions for your module.
-# Module outputs are made available to the configuration using the module, so they are
-# often used to pass information about the parts of your infrastructure defined by the
-# module to other parts of your configuration.
+output "id" {
+  description = "The ID of the instance"
+  value       = try(aws_instance.this[0].id, null)
+}
+
+output "arn" {
+  description = "The ARN of the instance"
+  value       = try(aws_instance.this[0].arn, null)
+}
+
+output "ami" {
+  description = "AMI ID that was used to create the instance"
+  value       = try(aws_instance.this[0].ami, null)
+}
+
+output "availability_zone" {
+  description = "The availability zone of the created instance"
+  value       = try(aws_instance.this[0].availability_zone, null)
+}
+
+output "instance_state" {
+  description = "The state of the instance"
+  value       = try(aws_instance.this[0].instance_state, null)
+}
+
+output "primary_network_interface_id" {
+  description = "The ID of the instance's primary network interface"
+  value       = try(aws_instance.this[0].primary_network_interface_id, null)
+}
+
+output "private_dns" {
+  description = "The private DNS name assigned to the instance"
+  value       = try(aws_instance.this[0].private_dns, null)
+}
+
+output "private_ip" {
+  description = "The private IP address assigned to the instance"
+  value       = try(aws_instance.this[0].private_ip, null)
+}
+
+output "public_dns" {
+  description = "The public DNS name assigned to the instance"
+  value       = try(aws_instance.this[0].public_dns, null)
+}
+
+output "public_ip" {
+  description = "The public IP address assigned to the instance"
+  value       = try(aws_instance.this[0].public_ip, null)
+}
+
+output "tags_all" {
+  description = "A map of tags assigned to the resource, including those inherited from the provider default_tags configuration block"
+  value       = try(aws_instance.this[0].tags_all, {})
+}
+
+################################################################################
+# Secrets Manager & OS Credentials
+################################################################################
+
+output "os_credentials_secret_arn" {
+  description = "The ARN of the Secrets Manager secret storing the OS user credentials"
+  value       = try(aws_secretsmanager_secret.os_credentials[0].arn, null)
+}
+
+output "os_credentials_secret_id" {
+  description = "The ID of the Secrets Manager secret storing the OS user credentials"
+  value       = try(aws_secretsmanager_secret.os_credentials[0].id, null)
+}
+
+output "os_credentials" {
+  description = "Map of user names and passwords generated or configured for the instance"
+  value       = var.create_os_credentials_secret ? local.final_os_credentials : null
+  sensitive   = true
+}
