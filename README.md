@@ -117,84 +117,390 @@ module "ec2_instance" {
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.62 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.6 |
+The following requirements are needed by this module:
+
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.0)
+
+- <a name="requirement_aws"></a> [aws](#requirement\_aws) (~> 5.62)
+
+- <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.6)
 
 ## Modules
 
 No modules.
 
-## Inputs
+## Required Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_ami"></a> [ami](#input\_ami) | ID of AMI to use for the instance | `string` | `null` | no |
-| <a name="input_associate_public_ip_address"></a> [associate\_public\_ip\_address](#input\_associate\_public\_ip\_address) | Whether to associate a public IP address with an instance in a VPC | `bool` | `null` | no |
-| <a name="input_availability_zone"></a> [availability\_zone](#input\_availability\_zone) | AZ to start the instance in | `string` | `null` | no |
-| <a name="input_cpu_credits"></a> [cpu\_credits](#input\_cpu\_credits) | The credit option for CPU usage (unlimited or standard) | `string` | `null` | no |
-| <a name="input_create"></a> [create](#input\_create) | Whether to create an instance | `bool` | `true` | no |
-| <a name="input_create_os_credentials_secret"></a> [create\_os\_credentials\_secret](#input\_create\_os\_credentials\_secret) | Controls whether to generate random passwords for OS user accounts and store them in AWS Secrets Manager. | `bool` | `false` | no |
-| <a name="input_disable_api_termination"></a> [disable\_api\_termination](#input\_disable\_api\_termination) | If true, enables EC2 Instance Termination Protection | `bool` | `null` | no |
-| <a name="input_ebs_block_device"></a> [ebs\_block\_device](#input\_ebs\_block\_device) | Additional EBS block devices to attach to the instance | `list(any)` | `[]` | no |
-| <a name="input_ebs_optimized"></a> [ebs\_optimized](#input\_ebs\_optimized) | If true, the launched EC2 instance will be EBS-optimized | `bool` | `null` | no |
-| <a name="input_enable_volume_tags"></a> [enable\_volume\_tags](#input\_enable\_volume\_tags) | Whether to enable volume tags (if enabled it conflicts with root\_block\_device tags) | `bool` | `true` | no |
-| <a name="input_iam_instance_profile"></a> [iam\_instance\_profile](#input\_iam\_instance\_profile) | IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile | `string` | `null` | no |
-| <a name="input_instance_initiated_shutdown_behavior"></a> [instance\_initiated\_shutdown\_behavior](#input\_instance\_initiated\_shutdown\_behavior) | Shutdown behavior for the instance. Available values: stop, terminate | `string` | `null` | no |
-| <a name="input_instance_tags"></a> [instance\_tags](#input\_instance\_tags) | Additional tags for the instance | `map(string)` | `{}` | no |
-| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | The type of instance to start | `string` | `"t3.micro"` | no |
-| <a name="input_key_name"></a> [key\_name](#input\_key\_name) | Key name of the Key Pair to use for the instance | `string` | `null` | no |
-| <a name="input_metadata_options"></a> [metadata\_options](#input\_metadata\_options) | Customize the metadata options of the instance | `map(string)` | <pre>{<br/>  "http_endpoint": "enabled",<br/>  "http_put_response_hop_limit": 1,<br/>  "http_tokens": "optional"<br/>}</pre> | no |
-| <a name="input_monitoring"></a> [monitoring](#input\_monitoring) | If true, the launched EC2 instance will have detailed monitoring enabled | `bool` | `null` | no |
-| <a name="input_name"></a> [name](#input\_name) | Name to be used on EC2 instance created | `string` | `""` | no |
-| <a name="input_os_credentials"></a> [os\_credentials](#input\_os\_credentials) | Map of user names to explicit passwords. If a username is mapped to null, a random password will be auto-generated. | `map(string)` | `{}` | no |
-| <a name="input_private_ip"></a> [private\_ip](#input\_private\_ip) | Private IP address to associate with the instance in a VPC | `string` | `null` | no |
-| <a name="input_putin_khuylo"></a> [putin\_khuylo](#input\_putin\_khuylo) | Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo! | `bool` | `true` | no |
-| <a name="input_root_block_device"></a> [root\_block\_device](#input\_root\_block\_device) | Customize details about the root block device of the instance | `list(any)` | `[]` | no |
-| <a name="input_secret_description"></a> [secret\_description](#input\_secret\_description) | Description for the Secrets Manager secret storing OS credentials. | `string` | `"Linux VM credentials managed by Terraform"` | no |
-| <a name="input_secret_name"></a> [secret\_name](#input\_secret\_name) | Name for the Secrets Manager secret storing OS credentials. Defaults to `demo/linux/<name>`. | `string` | `null` | no |
-| <a name="input_secret_recovery_window_in_days"></a> [secret\_recovery\_window\_in\_days](#input\_secret\_recovery\_window\_in\_days) | Number of days that AWS Secrets Manager waits before deleting a secret (0 for immediate deletion). | `number` | `0` | no |
-| <a name="input_secret_tags"></a> [secret\_tags](#input\_secret\_tags) | A map of tags to assign to the Secrets Manager secret. | `map(string)` | `{}` | no |
-| <a name="input_source_dest_check"></a> [source\_dest\_check](#input\_source\_dest\_check) | Controls if traffic is routed to the instance when the destination address does not match the instance | `bool` | `null` | no |
-| <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The VPC Subnet ID to launch in | `string` | `null` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to the resource | `map(string)` | `{}` | no |
-| <a name="input_tenancy"></a> [tenancy](#input\_tenancy) | The tenancy of the instance. Available values: default, dedicated, host | `string` | `null` | no |
-| <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | Define maximum timeout for creating, updating, and deleting EC2 instance resources | `map(string)` | `{}` | no |
-| <a name="input_user_data"></a> [user\_data](#input\_user\_data) | The user data to provide when launching the instance | `string` | `null` | no |
-| <a name="input_user_data_base64"></a> [user\_data\_base64](#input\_user\_data\_base64) | Base64-encoded binary data to pass as user data | `string` | `null` | no |
-| <a name="input_user_data_replace_on_change"></a> [user\_data\_replace\_on\_change](#input\_user\_data\_replace\_on\_change) | Triggers a destroy and recreate when user\_data changes | `bool` | `null` | no |
-| <a name="input_volume_tags"></a> [volume\_tags](#input\_volume\_tags) | A mapping of tags to assign to the devices created by the instance at launch time | `map(string)` | `{}` | no |
-| <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | A list of security group IDs to associate with | `list(string)` | `null` | no |
+No required inputs.
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### <a name="input_ami"></a> [ami](#input\_ami)
+
+Description: ID of AMI to use for the instance
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_associate_public_ip_address"></a> [associate\_public\_ip\_address](#input\_associate\_public\_ip\_address)
+
+Description: Whether to associate a public IP address with an instance in a VPC
+
+Type: `bool`
+
+Default: `null`
+
+### <a name="input_availability_zone"></a> [availability\_zone](#input\_availability\_zone)
+
+Description: AZ to start the instance in
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_cpu_credits"></a> [cpu\_credits](#input\_cpu\_credits)
+
+Description: The credit option for CPU usage (unlimited or standard)
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_create"></a> [create](#input\_create)
+
+Description: Whether to create an instance
+
+Type: `bool`
+
+Default: `true`
+
+### <a name="input_create_os_credentials_secret"></a> [create\_os\_credentials\_secret](#input\_create\_os\_credentials\_secret)
+
+Description: Controls whether to generate random passwords for OS user accounts and store them in AWS Secrets Manager.
+
+Type: `bool`
+
+Default: `false`
+
+### <a name="input_disable_api_termination"></a> [disable\_api\_termination](#input\_disable\_api\_termination)
+
+Description: If true, enables EC2 Instance Termination Protection
+
+Type: `bool`
+
+Default: `null`
+
+### <a name="input_ebs_block_device"></a> [ebs\_block\_device](#input\_ebs\_block\_device)
+
+Description: Additional EBS block devices to attach to the instance
+
+Type: `list(any)`
+
+Default: `[]`
+
+### <a name="input_ebs_optimized"></a> [ebs\_optimized](#input\_ebs\_optimized)
+
+Description: If true, the launched EC2 instance will be EBS-optimized
+
+Type: `bool`
+
+Default: `null`
+
+### <a name="input_enable_volume_tags"></a> [enable\_volume\_tags](#input\_enable\_volume\_tags)
+
+Description: Whether to enable volume tags (if enabled it conflicts with root\_block\_device tags)
+
+Type: `bool`
+
+Default: `true`
+
+### <a name="input_iam_instance_profile"></a> [iam\_instance\_profile](#input\_iam\_instance\_profile)
+
+Description: IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_instance_initiated_shutdown_behavior"></a> [instance\_initiated\_shutdown\_behavior](#input\_instance\_initiated\_shutdown\_behavior)
+
+Description: Shutdown behavior for the instance. Available values: stop, terminate
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_instance_tags"></a> [instance\_tags](#input\_instance\_tags)
+
+Description: Additional tags for the instance
+
+Type: `map(string)`
+
+Default: `{}`
+
+### <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type)
+
+Description: The type of instance to start
+
+Type: `string`
+
+Default: `"t3.micro"`
+
+### <a name="input_key_name"></a> [key\_name](#input\_key\_name)
+
+Description: Key name of the Key Pair to use for the instance
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_metadata_options"></a> [metadata\_options](#input\_metadata\_options)
+
+Description: Customize the metadata options of the instance
+
+Type: `map(string)`
+
+Default:
+
+```json
+{
+  "http_endpoint": "enabled",
+  "http_put_response_hop_limit": 1,
+  "http_tokens": "optional"
+}
+```
+
+### <a name="input_monitoring"></a> [monitoring](#input\_monitoring)
+
+Description: If true, the launched EC2 instance will have detailed monitoring enabled
+
+Type: `bool`
+
+Default: `null`
+
+### <a name="input_name"></a> [name](#input\_name)
+
+Description: Name to be used on EC2 instance created
+
+Type: `string`
+
+Default: `""`
+
+### <a name="input_os_credentials"></a> [os\_credentials](#input\_os\_credentials)
+
+Description: Map of user names to explicit passwords. If a username is mapped to null, a random password will be auto-generated.
+
+Type: `map(string)`
+
+Default: `{}`
+
+### <a name="input_private_ip"></a> [private\_ip](#input\_private\_ip)
+
+Description: Private IP address to associate with the instance in a VPC
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_putin_khuylo"></a> [putin\_khuylo](#input\_putin\_khuylo)
+
+Description: Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!
+
+Type: `bool`
+
+Default: `true`
+
+### <a name="input_root_block_device"></a> [root\_block\_device](#input\_root\_block\_device)
+
+Description: Customize details about the root block device of the instance
+
+Type: `list(any)`
+
+Default: `[]`
+
+### <a name="input_secret_description"></a> [secret\_description](#input\_secret\_description)
+
+Description: Description for the Secrets Manager secret storing OS credentials.
+
+Type: `string`
+
+Default: `"Linux VM credentials managed by Terraform"`
+
+### <a name="input_secret_name"></a> [secret\_name](#input\_secret\_name)
+
+Description: Name for the Secrets Manager secret storing OS credentials. Defaults to `demo/linux/<name>`.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_secret_recovery_window_in_days"></a> [secret\_recovery\_window\_in\_days](#input\_secret\_recovery\_window\_in\_days)
+
+Description: Number of days that AWS Secrets Manager waits before deleting a secret (0 for immediate deletion).
+
+Type: `number`
+
+Default: `0`
+
+### <a name="input_secret_tags"></a> [secret\_tags](#input\_secret\_tags)
+
+Description: A map of tags to assign to the Secrets Manager secret.
+
+Type: `map(string)`
+
+Default: `{}`
+
+### <a name="input_source_dest_check"></a> [source\_dest\_check](#input\_source\_dest\_check)
+
+Description: Controls if traffic is routed to the instance when the destination address does not match the instance
+
+Type: `bool`
+
+Default: `null`
+
+### <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id)
+
+Description: The VPC Subnet ID to launch in
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_tags"></a> [tags](#input\_tags)
+
+Description: A mapping of tags to assign to the resource
+
+Type: `map(string)`
+
+Default: `{}`
+
+### <a name="input_tenancy"></a> [tenancy](#input\_tenancy)
+
+Description: The tenancy of the instance. Available values: default, dedicated, host
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_timeouts"></a> [timeouts](#input\_timeouts)
+
+Description: Define maximum timeout for creating, updating, and deleting EC2 instance resources
+
+Type: `map(string)`
+
+Default: `{}`
+
+### <a name="input_user_data"></a> [user\_data](#input\_user\_data)
+
+Description: The user data to provide when launching the instance
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_user_data_base64"></a> [user\_data\_base64](#input\_user\_data\_base64)
+
+Description: Base64-encoded binary data to pass as user data
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_user_data_replace_on_change"></a> [user\_data\_replace\_on\_change](#input\_user\_data\_replace\_on\_change)
+
+Description: Triggers a destroy and recreate when user\_data changes
+
+Type: `bool`
+
+Default: `null`
+
+### <a name="input_volume_tags"></a> [volume\_tags](#input\_volume\_tags)
+
+Description: A mapping of tags to assign to the devices created by the instance at launch time
+
+Type: `map(string)`
+
+Default: `{}`
+
+### <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids)
+
+Description: A list of security group IDs to associate with
+
+Type: `list(string)`
+
+Default: `null`
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [aws_instance.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
-| [aws_secretsmanager_secret.os_credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
-| [aws_secretsmanager_secret_version.os_credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
-| [random_password.os_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+The following resources are used by this module:
+
+- [aws_instance.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) (resource)
+- [aws_secretsmanager_secret.os_credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) (resource)
+- [aws_secretsmanager_secret_version.os_credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) (resource)
+- [random_password.os_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) (resource)
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_ami"></a> [ami](#output\_ami) | AMI ID that was used to create the instance |
-| <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the instance |
-| <a name="output_availability_zone"></a> [availability\_zone](#output\_availability\_zone) | The availability zone of the created instance |
-| <a name="output_id"></a> [id](#output\_id) | The ID of the instance |
-| <a name="output_instance_state"></a> [instance\_state](#output\_instance\_state) | The state of the instance |
-| <a name="output_os_credentials"></a> [os\_credentials](#output\_os\_credentials) | Map of user names and passwords generated or configured for the instance |
-| <a name="output_os_credentials_secret_arn"></a> [os\_credentials\_secret\_arn](#output\_os\_credentials\_secret\_arn) | The ARN of the Secrets Manager secret storing the OS user credentials |
-| <a name="output_os_credentials_secret_id"></a> [os\_credentials\_secret\_id](#output\_os\_credentials\_secret\_id) | The ID of the Secrets Manager secret storing the OS user credentials |
-| <a name="output_primary_network_interface_id"></a> [primary\_network\_interface\_id](#output\_primary\_network\_interface\_id) | The ID of the instance's primary network interface |
-| <a name="output_private_dns"></a> [private\_dns](#output\_private\_dns) | The private DNS name assigned to the instance |
-| <a name="output_private_ip"></a> [private\_ip](#output\_private\_ip) | The private IP address assigned to the instance |
-| <a name="output_public_dns"></a> [public\_dns](#output\_public\_dns) | The public DNS name assigned to the instance |
-| <a name="output_public_ip"></a> [public\_ip](#output\_public\_ip) | The public IP address assigned to the instance |
-| <a name="output_tags_all"></a> [tags\_all](#output\_tags\_all) | A map of tags assigned to the resource, including those inherited from the provider default\_tags configuration block |
+The following outputs are exported:
+
+### <a name="output_ami"></a> [ami](#output\_ami)
+
+Description: AMI ID that was used to create the instance
+
+### <a name="output_arn"></a> [arn](#output\_arn)
+
+Description: The ARN of the instance
+
+### <a name="output_availability_zone"></a> [availability\_zone](#output\_availability\_zone)
+
+Description: The availability zone of the created instance
+
+### <a name="output_id"></a> [id](#output\_id)
+
+Description: The ID of the instance
+
+### <a name="output_instance_state"></a> [instance\_state](#output\_instance\_state)
+
+Description: The state of the instance
+
+### <a name="output_os_credentials"></a> [os\_credentials](#output\_os\_credentials)
+
+Description: Map of user names and passwords generated or configured for the instance
+
+### <a name="output_os_credentials_secret_arn"></a> [os\_credentials\_secret\_arn](#output\_os\_credentials\_secret\_arn)
+
+Description: The ARN of the Secrets Manager secret storing the OS user credentials
+
+### <a name="output_os_credentials_secret_id"></a> [os\_credentials\_secret\_id](#output\_os\_credentials\_secret\_id)
+
+Description: The ID of the Secrets Manager secret storing the OS user credentials
+
+### <a name="output_primary_network_interface_id"></a> [primary\_network\_interface\_id](#output\_primary\_network\_interface\_id)
+
+Description: The ID of the instance's primary network interface
+
+### <a name="output_private_dns"></a> [private\_dns](#output\_private\_dns)
+
+Description: The private DNS name assigned to the instance
+
+### <a name="output_private_ip"></a> [private\_ip](#output\_private\_ip)
+
+Description: The private IP address assigned to the instance
+
+### <a name="output_public_dns"></a> [public\_dns](#output\_public\_dns)
+
+Description: The public DNS name assigned to the instance
+
+### <a name="output_public_ip"></a> [public\_ip](#output\_public\_ip)
+
+Description: The public IP address assigned to the instance
+
+### <a name="output_tags_all"></a> [tags\_all](#output\_tags\_all)
+
+Description: A map of tags assigned to the resource, including those inherited from the provider default\_tags configuration block
 
 <!-- markdownlint-enable -->
 ## External Documentation
